@@ -4,7 +4,7 @@
 - Lukas Piedrahita Serna - CC 1040872196
 - Felipe Uribe Holguin - CC 1026132431
 
-##Descripción del proyecto
+## Descripción del proyecto
 
 Laboratorio de Sistemas Operativos. Simula la traducción **VA → PA** con una tabla
 de páginas de dos niveles, fallos de página con carga bajo demanda, un almacén de
