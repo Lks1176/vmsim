@@ -1,0 +1,26 @@
+# Anomalía de Belady. Ejecutar con: -s 65536 -m 256  y  -s 65536 -m 320
+alloc 524288
+read 0
+read 196608
+read 327680
+read 131072
+read 131072
+read 458752
+read 0
+read 0
+read 65536
+read 65536
+read 65536
+read 131072
+read 327680
+read 262144
+read 65536
+read 0
+read 196608
+read 327680
+read 131072
+read 458752
+read 262144
+read 65536
+read 196608
+read 327680

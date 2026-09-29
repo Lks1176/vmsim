@@ -1,0 +1,14 @@
+# Manejo de errores y ciclo de vida: alloc / free / segfault / reutilización.
+alloc 8192            # A: VA 0x0000 - 0x1FFF
+alloc 4096            # B: VA 0x2000
+write 0 10  write 4096 11  write 8192 12
+read 8192
+free 0                # libera A (marcos y swap)
+read 0                # ERROR: segfault (A ya no existe)
+free 0                # ERROR: doble free
+free 4096             # ERROR: no es el inicio de una reserva
+read 12288            # ERROR: fuera de toda reserva
+alloc 0               # ERROR: tamaño inválido
+alloc 4294967295      # ERROR: 4 GB no caben (ya hay 12 KB reservados)
+alloc 4096            # C: nueva reserva, se sigue funcionando
+write 12288 77  read 12288

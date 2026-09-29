@@ -1,0 +1,2 @@
+# Ejemplo del enunciado: 2 páginas, 2 fallos (primer acceso), 2 aciertos.
+alloc 8192  write 0 42  write 4096 99  read 0  read 4096

@@ -1,0 +1,386 @@
+# 96 páginas (384 KB) > 64 marcos. Se escribe una vez y se lee 3 veces en orden.
+alloc 393216
+write 0 0
+write 4096 1
+write 8192 2
+write 12288 3
+write 16384 4
+write 20480 5
+write 24576 6
+write 28672 7
+write 32768 8
+write 36864 9
+write 40960 10
+write 45056 11
+write 49152 12
+write 53248 13
+write 57344 14
+write 61440 15
+write 65536 16
+write 69632 17
+write 73728 18
+write 77824 19
+write 81920 20
+write 86016 21
+write 90112 22
+write 94208 23
+write 98304 24
+write 102400 25
+write 106496 26
+write 110592 27
+write 114688 28
+write 118784 29
+write 122880 30
+write 126976 31
+write 131072 32
+write 135168 33
+write 139264 34
+write 143360 35
+write 147456 36
+write 151552 37
+write 155648 38
+write 159744 39
+write 163840 40
+write 167936 41
+write 172032 42
+write 176128 43
+write 180224 44
+write 184320 45
+write 188416 46
+write 192512 47
+write 196608 48
+write 200704 49
+write 204800 50
+write 208896 51
+write 212992 52
+write 217088 53
+write 221184 54
+write 225280 55
+write 229376 56
+write 233472 57
+write 237568 58
+write 241664 59
+write 245760 60
+write 249856 61
+write 253952 62
+write 258048 63
+write 262144 64
+write 266240 65
+write 270336 66
+write 274432 67
+write 278528 68
+write 282624 69
+write 286720 70
+write 290816 71
+write 294912 72
+write 299008 73
+write 303104 74
+write 307200 75
+write 311296 76
+write 315392 77
+write 319488 78
+write 323584 79
+write 327680 80
+write 331776 81
+write 335872 82
+write 339968 83
+write 344064 84
+write 348160 85
+write 352256 86
+write 356352 87
+write 360448 88
+write 364544 89
+write 368640 90
+write 372736 91
+write 376832 92
+write 380928 93
+write 385024 94
+write 389120 95
+read 0
+read 4096
+read 8192
+read 12288
+read 16384
+read 20480
+read 24576
+read 28672
+read 32768
+read 36864
+read 40960
+read 45056
+read 49152
+read 53248
+read 57344
+read 61440
+read 65536
+read 69632
+read 73728
+read 77824
+read 81920
+read 86016
+read 90112
+read 94208
+read 98304
+read 102400
+read 106496
+read 110592
+read 114688
+read 118784
+read 122880
+read 126976
+read 131072
+read 135168
+read 139264
+read 143360
+read 147456
+read 151552
+read 155648
+read 159744
+read 163840
+read 167936
+read 172032
+read 176128
+read 180224
+read 184320
+read 188416
+read 192512
+read 196608
+read 200704
+read 204800
+read 208896
+read 212992
+read 217088
+read 221184
+read 225280
+read 229376
+read 233472
+read 237568
+read 241664
+read 245760
+read 249856
+read 253952
+read 258048
+read 262144
+read 266240
+read 270336
+read 274432
+read 278528
+read 282624
+read 286720
+read 290816
+read 294912
+read 299008
+read 303104
+read 307200
+read 311296
+read 315392
+read 319488
+read 323584
+read 327680
+read 331776
+read 335872
+read 339968
+read 344064
+read 348160
+read 352256
+read 356352
+read 360448
+read 364544
+read 368640
+read 372736
+read 376832
+read 380928
+read 385024
+read 389120
+read 0
+read 4096
+read 8192
+read 12288
+read 16384
+read 20480
+read 24576
+read 28672
+read 32768
+read 36864
+read 40960
+read 45056
+read 49152
+read 53248
+read 57344
+read 61440
+read 65536
+read 69632
+read 73728
+read 77824
+read 81920
+read 86016
+read 90112
+read 94208
+read 98304
+read 102400
+read 106496
+read 110592
+read 114688
+read 118784
+read 122880
+read 126976
+read 131072
+read 135168
+read 139264
+read 143360
+read 147456
+read 151552
+read 155648
+read 159744
+read 163840
+read 167936
+read 172032
+read 176128
+read 180224
+read 184320
+read 188416
+read 192512
+read 196608
+read 200704
+read 204800
+read 208896
+read 212992
+read 217088
+read 221184
+read 225280
+read 229376
+read 233472
+read 237568
+read 241664
+read 245760
+read 249856
+read 253952
+read 258048
+read 262144
+read 266240
+read 270336
+read 274432
+read 278528
+read 282624
+read 286720
+read 290816
+read 294912
+read 299008
+read 303104
+read 307200
+read 311296
+read 315392
+read 319488
+read 323584
+read 327680
+read 331776
+read 335872
+read 339968
+read 344064
+read 348160
+read 352256
+read 356352
+read 360448
+read 364544
+read 368640
+read 372736
+read 376832
+read 380928
+read 385024
+read 389120
+read 0
+read 4096
+read 8192
+read 12288
+read 16384
+read 20480
+read 24576
+read 28672
+read 32768
+read 36864
+read 40960
+read 45056
+read 49152
+read 53248
+read 57344
+read 61440
+read 65536
+read 69632
+read 73728
+read 77824
+read 81920
+read 86016
+read 90112
+read 94208
+read 98304
+read 102400
+read 106496
+read 110592
+read 114688
+read 118784
+read 122880
+read 126976
+read 131072
+read 135168
+read 139264
+read 143360
+read 147456
+read 151552
+read 155648
+read 159744
+read 163840
+read 167936
+read 172032
+read 176128
+read 180224
+read 184320
+read 188416
+read 192512
+read 196608
+read 200704
+read 204800
+read 208896
+read 212992
+read 217088
+read 221184
+read 225280
+read 229376
+read 233472
+read 237568
+read 241664
+read 245760
+read 249856
+read 253952
+read 258048
+read 262144
+read 266240
+read 270336
+read 274432
+read 278528
+read 282624
+read 286720
+read 290816
+read 294912
+read 299008
+read 303104
+read 307200
+read 311296
+read 315392
+read 319488
+read 323584
+read 327680
+read 331776
+read 335872
+read 339968
+read 344064
+read 348160
+read 352256
+read 356352
+read 360448
+read 364544
+read 368640
+read 372736
+read 376832
+read 380928
+read 385024
+read 389120
