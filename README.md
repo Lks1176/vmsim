@@ -180,7 +180,7 @@ entre sí; `vm` es el único que los une.
 
 ---
 
-## 4. Buenas prácticas y patrones de diseño usados (y dónde)
+## 4. Buenas prácticas y patrones de diseño usados
 
 ### Patrones de diseño
 
@@ -188,9 +188,8 @@ entre sí; `vm` es el único que los une.
 |---|---|---|
 | **Strategy** | `policy/replacement.h` (interfaz `ReplacementPolicy` con punteros a función) y `policy/fifo.c` | La política es intercambiable. `page_fault.c` llama a `policy->select_victim()` sin saber que es FIFO. Agregar LRU no modifica ningún otro archivo salvo la fábrica. |
 | **Factory** | `replacement_create()` en `policy/replacement.c` | Un único lugar decide qué implementación construir según `PolicyType`. |
-| **Facade** | `vm/virtual_memory.h` | El simulador solo ve `vm_alloc/free/read/write`; oculta tablas, marcos, swap y política. |
 | **Command** | `app/command_parser.[ch]` + tabla de despacho `HANDLERS[]` en `app/simulator.c` | Cada línea se convierte en un objeto `Command` que se despacha por tipo, sin cadenas de `if/else`. Agregar un comando = una entrada en `COMMAND_SPECS` + un manejador. |
-| **Tipo de dato abstracto (opaco)** | `PageTable`, `PhysicalMemory`, `Swap`, `RegionTable` (struct definido solo en el `.c`) | Encapsulamiento: nadie fuera del módulo toca su representación. |
+| **Encapsulamiento** | `PageTable`, `PhysicalMemory`, `Swap`, `RegionTable` (struct definido solo en el `.c`) | Nadie fuera del módulo toca su representación. |
 | **Herencia por composición (C)** | `FifoPolicy` contiene `ReplacementPolicy base` como **primer campo** | Permite convertir `ReplacementPolicy*` ↔ `FifoPolicy*` de forma segura, como una clase base. |
 | **Lista intrusiva** | `policy/fifo.c` (`next[]`/`prev[]` indexados por marco) | Cola FIFO con inserción, consulta y **borrado en cualquier posición en O(1)** (necesario cuando `free` libera marcos del medio). |
 
@@ -198,35 +197,13 @@ entre sí; `vm` es el único que los une.
 
 | Práctica | Dónde |
 |---|---|
-| **`main` sin lógica** | `main.c` solo llama a `config_from_args` y `simulator_run`. |
-| **Separación de responsabilidades** | Traducción (`translation.c`), fallos (`page_fault.c`), reemplazo (`policy/`) están en archivos distintos, como pide el enunciado. |
+| **Separación de responsabilidades** | Traducción (`translation.c`), fallos (`page_fault.c`), reemplazo (`policy/`) están en archivos distintos. |
 | **Manejo de errores por valores de retorno** | Toda función falible devuelve `VmStatus`. Las librerías nunca llaman `exit()` ni imprimen: solo `simulator.c` decide cómo reportar. Se distingue error recuperable de fatal (`vm_status_is_fatal`). |
 | **Validación en la frontera** | `config_validate` (RAM ≥ 256 KB, página potencia de 2, RAM múltiplo de página), `numparse.c` (rechaza signos, basura y desbordes; `atoi` no lo hace), parser (comandos desconocidos, argumentos faltantes, valor > 255). |
 | **Programación defensiva** | `pm_free_frame` y `swap_free_slot` detectan doble liberación; `pm_read_byte` verifica límites de PA; `evict_frame` verifica que tabla y marco concuerden (`VM_ERR_INTERNAL`). |
 | **Sin fugas, limpieza única** | Patrón `create/destroy` por módulo; todos los `*_destroy` toleran `NULL`, así `vm_create` limpia con un solo `goto fail` si algo falla a medias. Verificado con valgrind. |
 | **Crecimiento seguro de arreglos** | `swap_grow` y `rt_reserve` usan `realloc` con puntero temporal (no pierden el bloque si falla). |
-| **Sin números mágicos** | Constantes con nombre (`MIN_PHYS_MEM_BYTES`, `MAX_PAGE_SIZE`, `NIL`, ...); tablas de descriptores (`COMMAND_SPECS`, `OPTIONS`, `POLICY_TABLE`) en lugar de código repetido. |
-| **`const` y `static`** | Funciones internas `static`; parámetros de solo lectura `const`. |
 | **Include guards y dependencias automáticas** | Todos los `.h`; el Makefile usa `-MMD -MP` para recompilar si cambia un header. |
 | **Pruebas en 3 niveles** | Unitarias (por módulo), escenarios (resultados calculados a mano, verificación de integridad de datos) y estrés (200 000 accesos). |
 | **Determinismo** | FIFO es determinista y el marco libre se elige siempre en el mismo orden, por lo que las corridas son reproducibles. Las cargas aleatorias usan un generador con semilla fija. |
 | **Optimización de E/S** | Una página **limpia** se descarta sin escribirla a swap; una sucia reutiliza su ranura de swap. |
-
----
-
-## 5. Cómo extender: agregar LRU
-
-1. Crear `src/policy/lru.c` con su `lru_create(num_frames)`. Estado sugerido: la misma
-   lista intrusiva de FIFO, pero `on_access` **mueve el marco al final** de la lista.
-   `select_victim`, `on_load` y `on_release` quedan igual.
-2. Añadir `POLICY_LRU` al enum en `replacement.h`, una fila en `POLICY_TABLE` y un
-   `case` en `replacement_create()` y `replacement_type_name()`.
-
-No se modifica `translation.c`, `page_fault.c` ni el simulador: ya invocan `on_access`
-en cada acceso precisamente para esto.
-
-## 6. Limitaciones conocidas
-
-- No hay TLB (fuera del alcance del enunciado; ver OSTEP cap. 19).
-- El swap vive en memoria del host (no en disco real); su costo se modela con `--disk-ns`.
-- El asignador virtual nunca reutiliza direcciones liberadas.
