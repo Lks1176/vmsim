@@ -1,5 +1,11 @@
 # Simulador de memoria virtual con paginación de 2 niveles (política FIFO)
 
+## Integrantes del equipo
+- Lukas Piedrahita Serna - CC 1040872196
+- Felipe Uribe Holguin - CC 1026132431
+
+##Descripción del proyecto
+
 Laboratorio de Sistemas Operativos. Simula la traducción **VA → PA** con una tabla
 de páginas de dos niveles, fallos de página con carga bajo demanda, un almacén de
 respaldo (swap) y reemplazo de páginas **FIFO**.
