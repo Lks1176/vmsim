@@ -14,11 +14,6 @@ respaldo (swap) y reemplazo de páginas **FIFO**.
 - Sin dependencias externas. Verificado con `valgrind`: **0 fugas, 0 errores**.
 - Análisis y resultados: ver [`REPORTE.md`](REPORTE.md).
 
-> **¿Por qué C y no C++?** El enunciado exige `-std=c99`, y para este problema
-> structs opacos + punteros a función alcanzan para expresar todos los patrones
-> (Strategy, Facade, Command, Factory). Se evita el ruido de plantillas,
-> excepciones y RAII, lo que hace el código más fácil de explicar línea por línea.
-
 ---
 
 ## 1. Compilación y uso
