@@ -1,0 +1,32 @@
+# 06: el directorio (nivel 1) en acción.
+# Con página 4 KB: PT1(10b) | PT2(10b) | offset(12b). Cada L2 cubre 1024 páginas = 4 MB.
+#   PT1=0: VA 0x00000000 - 0x003FFFFF | PT1=1: VA 0x00400000 - 0x007FFFFF
+# Ver con: ./build/vmsim -v tests/workloads/06_directorio.txt
+#   - columna [PT1=X PT2=Y] muestra a qué tabla vas
+#   - "tabla de nivel 2 creada para PT1=X" marca el cambio de tabla
+#   - estadísticas finales: Tablas creadas 2 / liberadas 1, accesos 8, fallos 4, reemplazos 0
+
+alloc 4194304      # A: 1024 pags, VA 0x00000000-0x003FFFFF (llena justo PT1=0)
+alloc 4194304      # B: 1024 pags, VA 0x00400000-0x007FFFFF (ocupa PT1=1)
+
+# --- SIT 1: primera página de A -> crea L2 de PT1=0 (FALLO) ---
+write 0 11         # VA 0x00000000 [PT1=0 PT2=0]: FALLO + crea L2_0
+
+# --- SIT 2: otra página del MISMO PT1 -> reutiliza L2_0 (FALLO, sin crear tabla) ---
+write 4096 22      # VA 0x00001000 [PT1=0 PT2=1]: FALLO, misma tabla
+
+# --- SIT 3: mismo PT1+PT2, distinto offset -> misma PTE (HIT, sin fallo) ---
+write 5 33         # VA 0x00000005 [PT1=0 PT2=0 off=0x005]: HIT (mismo marco, otro byte)
+read 5             # VA 0x00000005: HIT (devuelve 33, sin nuevo fallo)
+
+# --- SIT 4: salto a PT1=1 -> crea L2_1 (¡CAMBIO DE TABLA, FALLO!) ---
+write 0x400000 44  # VA 0x00400000 [PT1=1 PT2=0]: FALLO + crea L2_1
+
+# --- SIT 5: segunda página de PT1=1 -> reutiliza L2_1 ---
+write 0x401000 55  # VA 0x00401000 [PT1=1 PT2=1]: FALLO, misma tabla
+read 0x400000      # VA 0x00400000: HIT (devuelve 44)
+
+# --- SIT 6: free parcial -> libera solo L2_0, L2_1 sobrevive ---
+free 0             # libera A: 1 tabla liberada (L2_0), B intacta
+read 0x400000      # HIT: B sigue residente (devuelve 44)
+read 0             # ERROR segfault: A ya no existe (no cuenta como acceso)

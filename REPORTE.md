@@ -140,6 +140,34 @@ Cadena de 24 referencias sobre 8 páginas, con páginas de 64 KB (`-s 65536`):
 - **Memoria:** `valgrind --leak-check=full` sobre el simulador y sobre las pruebas unitarias:
   *All heap blocks were freed — 0 errors*.
 
+### 3.6 Programa 6 — Directorio de tablas (`06_directorio.txt`)
+
+Dos reservas de 4 MB contiguas: A en `VA 0x00000000` (PT1=0) y B en `VA 0x00400000`
+(PT1=1). Con página de 4 KB cada tabla de nivel 2 cubre 1024 páginas = 4 MB, por lo
+que el "excedente" de una reserva mayor a 4 MB cae en el siguiente PT1. Se ejecuta con
+`./build/vmsim -v tests/workloads/06_directorio.txt` para ver la columna
+`[PT1=X PT2=Y]` y los avisos `tabla de nivel 2 creada para PT1=X`.
+
+| Accesos | Fallos | Hit rate | Reemplazos | Tablas L2 creadas / liberadas |
+|---|---|---|---|---|
+| 8 (5 write + 3 read) | 4 | 50,00 % | 0 | 2 / 1 |
+
+Situaciones ilustradas (ver traza `-v`):
+
+1. `write 0` → `[PT1=0 PT2=0]` FALLO + crea L2 de PT1=0.
+2. `write 4096` → `[PT1=0 PT2=1]` FALLO pero reutiliza la misma L2.
+3. `write 5` / `read 5` → `[PT1=0 PT2=0 off=0x005]` HIT en la misma PTE (otro byte
+   del mismo marco, devuelve 33 sin nuevo fallo).
+4. `write 0x400000` → `[PT1=1 PT2=0]` FALLO + crea L2 de PT1=1 (**cambio de tabla**).
+5. `write 0x401000` → `[PT1=1 PT2=1]` FALLO, reutiliza la segunda L2; `read 0x400000`
+   es HIT (devuelve 44).
+6. `free 0` libera solo A (1 tabla L2 liberada, B intacta): `read 0x400000` sigue
+   siendo HIT mientras `read 0` falla con segfault (error recuperable, no cuenta como
+   acceso; `Comandos con error: 1 de 12`).
+
+Sin reemplazos a propósito (solo 4 marcos en uso de 64) para aislar el efecto del
+directorio del de la política FIFO.
+
 ## 4. Análisis: cambio del hit rate y de los reemplazos
 
 1. **Más memoria ⇒ (normalmente) más hits y menos reemplazos.** En el programa 3, pasar de 64 a
