@@ -33,7 +33,10 @@ static VmStatus do_alloc(Simulator *sim, const Command *cmd)
     uint32_t address;
     const VmStatus st = vm_alloc(sim->vm, cmd->bytes, &address);
     if (st == VM_OK) {
-        say(sim, "alloc %-10u -> VA 0x%08X\n", cmd->bytes, address);
+        const uint32_t page_size = sim->config->page_size;
+        const uint32_t num_pages = (cmd->bytes + page_size - 1u) / page_size;
+        say(sim, "alloc %-10u -> VA 0x%08X (%u %s)\n", cmd->bytes, address,
+            num_pages, num_pages == 1u ? "página" : "páginas");
     }
     return st;
 }
@@ -48,7 +51,9 @@ static VmStatus do_read(Simulator *sim, const Command *cmd)
     uint8_t value;
     const VmStatus st = vm_read(sim->vm, cmd->address, &value);
     if (st == VM_OK) {
-        say(sim, "read  VA 0x%08X -> %u\n", cmd->address, (unsigned)value);
+        const uint32_t page = cmd->address / sim->config->page_size;
+        say(sim, "read  VA 0x%08X (página %u) -> %u\n", cmd->address, page,
+            (unsigned)value);
     }
     return st;
 }
